@@ -1,68 +1,246 @@
-# CodeIgniter 4 Application Starter
+# SiPustaka — Layanan Busa Pustaka (CI4 + PWA)
 
-## What is CodeIgniter?
+Aplikasi peminjaman buku berbasis **Progressive Web App (PWA)** menggunakan **CodeIgniter 4**, **Bootstrap 5**, dan **JavaScript**.  
+Fitur utama: katalog buku, detail buku + pengaturan tanggal peminjaman/pengembalian, akun user (Shield), admin dashboard, kelola buku, data peminjaman, upload cover buku & foto profil.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+---
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## 1) Kebutuhan Sistem
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+### Minimal
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- PHP **8.1+**
+- Composer
+- MySQL/MariaDB
+- Web server (Apache/Nginx) atau `php spark serve`
 
-## Installation & updates
+### Ekstensi PHP yang direkomendasikan
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+- intl, mbstring, json, mysqlnd, curl
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+---
 
-## Setup
+## 2) Cara Clone Project dari GitHub
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+```bash
+git clone https://github.com/USERNAME/NAMA_REPO.git
+cd NAMA_REPO
+```
 
-## Important Change with index.php
+---
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+## 3) Install Dependency (Composer)
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+```bash
+composer install
+```
 
-**Please** read the user guide for a better explanation of how CI4 works!
+> Folder `vendor/` akan dibuat otomatis setelah perintah ini.
 
-## Repository Management
+---
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+## 4) Konfigurasi Environment (.env)
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+Di root project, buat file `.env` dari `env`:
 
-## Server Requirements
+**Windows (PowerShell)**
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+```powershell
+copy env .env
+```
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+**Linux/Mac**
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+```bash
+cp env .env
+```
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+Lalu buka `.env` dan atur minimal bagian ini:
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+```ini
+CI_ENVIRONMENT = development
+
+app.baseURL = 'http://localhost:8080/'
+
+database.default.hostname = localhost
+database.default.database = sipustaka
+database.default.username = root
+database.default.password =
+database.default.DBDriver = MySQLi
+database.default.DBPrefix =
+```
+
+> Jika pakai Laragon/XAMPP dan port berbeda, sesuaikan `app.baseURL`.
+
+---
+
+## 5) Setup Database
+
+### Opsi A (Direkomendasikan): Pakai Migration + Seeder
+
+1. Buat database kosong di MySQL/MariaDB:
+
+```sql
+CREATE DATABASE sipustaka;
+```
+
+2. Jalankan migration:
+
+```bash
+php spark migrate
+```
+
+3. Jalankan seeder (data contoh):
+
+```bash
+php spark db:seed DatabaseSeeder
+```
+
+✅ Selesai. Database terisi data contoh (user + buku + contoh peminjaman).
+
+---
+
+### Opsi B: Import Database dari file `.sql`
+
+Jika project menyediakan file SQL (mis. `sipustaka.sql`), kamu bisa import manual.
+
+1. Buat database:
+
+```sql
+CREATE DATABASE sipustaka;
+```
+
+2. Import lewat phpMyAdmin:
+
+- Buka phpMyAdmin → pilih database `sipustaka`
+- Menu **Import** → pilih file `sipustaka.sql` → klik **Go**
+
+Atau import lewat terminal:
+
+```bash
+mysql -u root -p sipustaka < sipustaka.sql
+```
+
+> Jika sudah import SQL, kamu **tidak perlu** migrate+seed lagi (kecuali memang ingin update struktur terbaru).
+
+---
+
+## 6) Menjalankan Aplikasi
+
+### Opsi 1: Pakai Built-in Server CI4
+
+```bash
+php spark serve
+```
+
+Akses:
+
+- `http://localhost:8080/`
+
+### Opsi 2: Pakai Apache/Laragon/XAMPP (Disarankan)
+
+Pastikan document root mengarah ke:
+
+```
+PROJECT/public
+```
+
+Akses:
+
+- `http://sipustaka.test/` atau `http://localhost/sipustaka/public`
+
+> CI4 memakai `public/index.php` sebagai entrypoint. Jadi **lebih aman** jika server mengarah ke folder `public`.
+
+---
+
+## 7) Akun Default (Jika Pakai Seeder)
+
+Jika kamu menjalankan `DatabaseSeeder`, contoh akun:
+
+- **Admin**
+
+  - Username: `admin`
+  - Password: `admin12345`
+
+- **User**
+  - Username: `andri`
+  - Password: `user12345`
+
+> Catatan: untuk Shield, email tersimpan di tabel `auth_identities`.
+
+---
+
+## 8) Perintah Penting (Pengembangan)
+
+### Reset total database (HATI-HATI: menghapus data)
+
+```bash
+php spark migrate:refresh
+php spark db:seed DatabaseSeeder
+```
+
+### Membuat migration baru
+
+```bash
+php spark make:migration NamaMigration
+```
+
+### Membuat seeder baru
+
+```bash
+php spark make:seeder NamaSeeder
+```
+
+---
+
+## 9) Upload File (Cover Buku & Foto Profil)
+
+Folder upload ada di:
+
+- `public/uploads/covers/` (cover buku)
+- `public/uploads/avatars/` (foto profil)
+
+Jika folder belum ada, buat manual:
+
+```bash
+mkdir -p public/uploads/covers public/uploads/avatars
+```
+
+> Umumnya folder `public/uploads/` tidak disimpan di GitHub (ada di `.gitignore`) karena berisi file pengguna.
+
+---
+
+## 10) Catatan Tentang PWA
+
+File penting PWA ada di:
+
+- `public/manifest.webmanifest`
+- `public/sw.js`
+
+Pastikan PWA berjalan dengan HTTPS di production, atau minimal `localhost` saat development.
+
+---
+
+## 11) Troubleshooting
+
+### A) URL masih ada `index.php`
+
+Pastikan server mengarah ke folder `public/` atau `.htaccess`/rewrite aktif.
+
+### B) Cover buku tidak tampil
+
+Cek:
+
+- kolom `books.cover` terisi nama file
+- file ada di `public/uploads/covers/`
+- form upload memakai `enctype="multipart/form-data"`
+
+### C) Login/Register tidak ikut layout
+
+Karena CI4 Shield memakai view bawaan, pastikan konfigurasi Shield diarahkan ke layout aplikasi (jika kamu melakukan override).
+
+---
+
+## 12) Lisensi
+
+Project ini dibuat untuk kebutuhan pembelajaran/pengembangan. Silakan sesuaikan bagian lisensi sesuai kebutuhan.
