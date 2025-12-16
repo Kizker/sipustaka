@@ -14,7 +14,7 @@ class UsersSeeder extends Seeder
             [
                 'username' => 'admin',
                 'email'    => 'admin@sipustaka.test',  // :contentReference[oaicite:9]{index=9}
-                'password' => 'admin12345',
+                'password' => 'Admin12345!',
                 'group'    => 'admin',                  // :contentReference[oaicite:10]{index=10}
                 'phone'    => '081234567890',
                 'address'  => 'Blok A',
@@ -23,7 +23,7 @@ class UsersSeeder extends Seeder
             [
                 'username' => 'andri',
                 'email'    => 'user@sipustaka.test',   // :contentReference[oaicite:11]{index=11}
-                'password' => 'user12345',
+                'password' => 'User12345!',
                 'group'    => 'user',                   // :contentReference[oaicite:12]{index=12}
                 'phone'    => '088747378869',
                 'address'  => 'Blok A',
