@@ -33,6 +33,12 @@ $routes->group('admin', ['filter' => 'group:admin'], static function($routes) {
     $routes->get('members', 'Admin\MembersController::index');
     $routes->get('members/(:num)/edit', 'Admin\MembersController::edit/$1');
     $routes->post('members/(:num)', 'Admin\MembersController::update/$1');
+
+    $routes->get('users', 'Admin\UsersController::index');
+    $routes->get('users/(:num)/edit', 'Admin\UsersController::edit/$1');
+    $routes->post('users/(:num)', 'Admin\UsersController::update/$1');
+    $routes->post('users/(:num)/toggle', 'Admin\UsersController::toggleActive/$1');
+    $routes->post('users/(:num)/role', 'Admin\UsersController::setRole/$1');
 });
 
 $routes->group('', ['filter' => 'session'], static function($routes) {

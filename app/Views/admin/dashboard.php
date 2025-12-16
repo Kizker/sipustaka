@@ -37,6 +37,7 @@
       <button class="btn btn-outline-primary btn-sm">Terapkan</button>
     </form>
 
+    <a href="/admin/users" class="btn btn-outline-dark btn-sm">Kelola Pengguna</a>
     <a href="/admin/books" class="btn btn-primary btn-sm">Kelola Buku</a>
     <a href="/admin/loans" class="btn btn-outline-primary btn-sm">Data Peminjaman</a>
   </div>
